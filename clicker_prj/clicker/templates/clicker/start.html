@@ -14,7 +14,7 @@
 <div class="wrapper">
 
 <h2 class="title">
-시험기간 딴짓 클리커 🎯
+클리커 시작하기 🎯
 </h2>
 
 
@@ -62,12 +62,28 @@ class="input"
 
 <div class="rank-item">
 
-<div>
-{{forloop.counter}}위 {{user.name}}
+<div class="rank-left 
+{% if forloop.counter <= 3 %}
+top-rank
+{% endif %}
+">
+
+{% if forloop.counter == 1 %}
+🥇
+{% elif forloop.counter == 2 %}
+🥈
+{% elif forloop.counter == 3 %}
+🥉
+{% else %}
+{{ forloop.counter }}위
+{% endif %}
+
+{{ user.name }}
+
 </div>
 
-<div>
-🔥 {{user.count}}
+<div class="rank-right">
+🔥 {{ user.count }}
 </div>
 
 </div>

@@ -61,6 +61,7 @@ flex:1;
 display:flex;
 justify-content:center;
 align-items:center;
+margin-bottom:80px;   
 }
 
 #clicker{
@@ -244,4 +245,25 @@ margin-top:15px;
 .bottom-btns a{
 flex:1;
 text-align:center;
+}
+
+.rank-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px;
+margin-bottom:8px;
+background:white;
+border-radius:14px;
+box-shadow:0 3px 8px rgba(0,0,0,0.05);
+}
+
+.top-rank{
+font-weight:600;
+font-size:16px;
+}
+
+.rank-right{
+font-size:14px;
+color:#666;
 }
