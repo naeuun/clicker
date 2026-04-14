@@ -1,0 +1,122 @@
+{% load static %}
+
+<!doctype html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="{% static 'clicker/css/style.css' %}">
+
+</head>
+
+
+<body>
+
+<div class="wrapper">
+
+<!-- 상단 -->
+<div class="header">
+
+<h2 class="title">
+시험기간 딴짓 클리커 🎯
+</h2>
+
+<!-- 상단 네비 -->
+<div class="top-nav">
+
+<a href="/" class="home-btn">
+← 첫 화면
+</a>
+
+<a href="/ranking/" class="ranking-btn">
+🏆 랭킹
+</a>
+
+</div>
+
+
+<div class="user-info">
+
+<div class="username">
+👤 {{user.name}}
+</div>
+
+<div class="count">
+🔥 <span id="count">{{user.count}}</span>
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- 디자인 선택 -->
+<div class="design-select">
+
+<button onclick="setDesign('lion', event)" class="selected">
+🦁
+</button>
+
+<button onclick="setDesign('bear', event)">
+🐻
+</button>
+
+<button onclick="setDesign('cat', event)">
+🐱
+</button>
+
+</div>
+
+
+<!-- 클릭 영역 -->
+<div class="click-area">
+
+<img 
+src="{% static 'clicker/images/lion_default.png' %}" 
+id="clicker"
+class="clicker"
+>
+
+</div>
+
+
+</div>
+
+
+
+<!-- 소리 선택 하단 고정 -->
+<div class="sound-fixed">
+
+<div class="sound-select">
+
+<button onclick="setSound('clicker1', event)" class="selected">
+딸깍
+</button>
+
+<button onclick="setSound('clicker2', event)">
+뽁
+</button>
+
+<button onclick="setSound('clicker3', event)">
+탁
+</button>
+
+</div>
+
+</div>
+
+
+
+<audio id="clickSound">
+<source 
+id="soundSource"
+src="{% static 'clicker/sounds/clicker1.mp3' %}">
+</audio>
+
+
+<script src="{% static 'clicker/js/clicker.js' %}"></script>
+
+</body>
+</html>

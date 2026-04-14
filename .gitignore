@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# migrations (원하면 유지, 아니면 주석 해제)
+*/migrations/*
+!*/migrations/__init__.py
+
+# Static / Media
+/staticfiles/
+/media/
+
+# Environment
+.env
+.env.*
+venv/
+env/
+ENV/
+myvenv/
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# Node (혹시 프론트 추가할 경우 대비)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# coverage
+.coverage
+htmlcov/
+
+# pytest
+.pytest_cache/
+
+# build
+build/
+dist/
+*.egg-info/

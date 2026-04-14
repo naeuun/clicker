@@ -1,0 +1,58 @@
+{% load static %}
+
+<!doctype html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{% static 'clicker/css/style.css' %}">
+
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<h2 class="title">
+🏆 전체 랭킹
+</h2>
+
+
+<div class="card">
+
+{% for user in users %}
+
+<div class="rank-item">
+
+<div>
+{{forloop.counter}}위 {{user.name}}
+</div>
+
+<div>
+🔥 {{user.count}}
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+
+<div class="bottom-btns">
+
+<a href="/" class="sub-btn">
+← 첫 화면
+</a>
+
+<a href="/clicker/" class="main-btn">
+클리커 이동
+</a>
+
+</div>
+
+
+</div>
+
+</body>
+</html>

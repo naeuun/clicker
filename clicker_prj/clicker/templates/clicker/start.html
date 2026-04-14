@@ -1,0 +1,87 @@
+{% load static %}
+
+<!doctype html>
+<html>
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{% static 'clicker/css/style.css' %}">
+
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<h2 class="title">
+시험기간 딴짓 클리커 🎯
+</h2>
+
+
+<!-- 로그인 박스 -->
+<div class="card">
+
+<form method="POST" action="/enter/">
+{% csrf_token %}
+
+<input 
+type="text"
+name="name"
+placeholder="이름"
+required
+class="input"
+>
+
+<input 
+type="password"
+name="pin"
+placeholder="4자리 비밀번호"
+maxlength="4"
+required
+class="input"
+>
+
+<button class="main-btn">
+시작하기 🚀
+</button>
+
+</form>
+
+</div>
+
+
+
+<!-- 랭킹 박스 -->
+<div class="card">
+
+<div class="card-title">
+🏆 실시간 랭킹
+</div>
+
+{% for user in users %}
+
+<div class="rank-item">
+
+<div>
+{{forloop.counter}}위 {{user.name}}
+</div>
+
+<div>
+🔥 {{user.count}}
+</div>
+
+</div>
+
+{% endfor %}
+
+<a href="/ranking/" class="sub-btn">
+전체 랭킹 보기
+</a>
+
+</div>
+
+
+</div>
+
+</body>
+</html>
