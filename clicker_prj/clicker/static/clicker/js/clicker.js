@@ -22,10 +22,16 @@ event.target.classList.add("selected")
 
 
 // 소리 선택
+const VALID_SOUNDS = ["clicker1", "clicker2", "clicker3"]
+
 function setSound(name, event){
 
-soundSource.src = `/static/clicker/sounds/${name}.mp3`
-sound.load()
+if (!VALID_SOUNDS.includes(name)) {
+console.warn("setSound: unknown sound name", name)
+return
+}
+
+sound.src = `/static/clicker/sounds/${name}.mp3`
 
 // 선택 스타일
 document.querySelectorAll(".sound-select button")
@@ -38,7 +44,10 @@ event.target.classList.add("selected")
 
 
 // 클릭 이벤트
-clicker.addEventListener("click", () => {
+clicker.addEventListener("pointerdown", (event) => {
+if (event.pointerType === "touch") {
+event.preventDefault()
+}
 
 fetch("/click/",{
 method:"POST",
