@@ -78,6 +78,10 @@ transform:scale(0.95);
 #clicker{
 width:230px;
 transition:0.1s;
+touch-action:manipulation;
+-webkit-tap-highlight-color:transparent;
+user-select:none;
+cursor:pointer;
 }
 
 #clicker:active{
