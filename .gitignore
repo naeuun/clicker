@@ -54,3 +54,6 @@ htmlcov/
 build/
 dist/
 *.egg-info/
+
+# key
+.pem
