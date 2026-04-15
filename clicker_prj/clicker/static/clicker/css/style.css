@@ -9,13 +9,21 @@ background:#f5f3f1;
 /* 전체 */
 
 .wrapper{
-max-width:420px;
-margin:0 auto;
-padding:20px;
-text-align:center;
-height:100vh;
-display:flex;
-flex-direction:column;
+  max-width:420px;
+  margin:0 auto;
+
+  /* iPhone에서 과한 padding이 넘침을 만들 수 있어 살짝 줄임 */
+  padding:14px;
+
+  text-align:center;
+  min-height:100vh;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+
+  /* 하단 고정(sound-fixed) 높이만큼 확보 + iPhone safe area */
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
+  box-sizing: border-box;
 }
 
 
@@ -55,15 +63,18 @@ transform:scale(0.95);
 
 
 /* 클릭 영역 */
-
 .click-area{
-flex:1;
-display:flex;
-justify-content:center;
-align-items:center;
-margin-bottom:80px;   
-}
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:center;
 
+  /* margin-bottom:80px;  <-- 제거: 이게 스크롤 원인 */
+  margin-bottom: 0;
+
+  /* safe area는 wrapper에서 처리할 거라 여기서는 빼도 됨 */
+  padding-bottom: 0;
+}
 #clicker{
 width:230px;
 transition:0.1s;
