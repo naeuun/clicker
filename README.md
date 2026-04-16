@@ -1,2 +1,3 @@
-# clicker
-같이 클리커멍 때리자
+# ANIMAL CLICKER 🦁😽🐻
+---
+2026-LIKELION-ANIMAL-LEAGUE | DUKSUNG LIKELION UNIV.
