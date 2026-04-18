@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animal Clicker 🦁</title>
+  <link rel="stylesheet" href="./assets/style.css" />
+  <style>
+    #ranking-preview { min-height: 60px; }
+    .loading-text    { color: #aaa; font-size: 14px; padding: 12px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h2 class="title">ANIMAL CLICKER 🦁😽🐻</h2>
+    <p>공부하기 싫은 만큼 클릭하세요. ^_^✨</p>
+
+    <!-- 로그인 박스 -->
+    <div class="card">
+      <div id="error-msg" style="color:#e53e3e;font-size:13px;margin-bottom:8px;display:none;"></div>
+      <input
+        type="text"
+        id="nickname"
+        placeholder="닉네임"
+        required
+        class="input"
+        maxlength="20"
+        autocomplete="username"
+      />
+      <input
+        type="password"
+        id="pin"
+        placeholder="4자리 비밀번호"
+        maxlength="4"
+        inputmode="numeric"
+        pattern="[0-9]{4}"
+        required
+        class="input"
+        autocomplete="current-password"
+      />
+      <button id="start-btn" class="main-btn">시작하기 🚀</button>
+    </div>
+
+    <!-- 랭킹 미리보기 박스 -->
+    <div class="card">
+      <div class="card-title">🏆 실시간 랭킹</div>
+      <div id="ranking-preview">
+        <div class="loading-text">랭킹을 불러오는 중…</div>
+      </div>
+      <a href="./ranking.html" class="sub-btn">전체 랭킹 보기</a>
+    </div>
+  </div>
+
+  <!-- Supabase JS v2 UMD bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- User-created config (gitignored). Must define window.SUPABASE_URL + window.SUPABASE_ANON_KEY -->
+  <script src="./config.js" onerror="window._configMissing=true"></script>
+  <script src="./assets/supabaseClient.js"></script>
+
+  <script>
+    // ── Redirect if already logged in ───────────────────────────
+    if (localStorage.getItem("nickname") && localStorage.getItem("pin")) {
+      location.replace("./clicker.html");
+    }
+
+    // ── Top-10 ranking preview ──────────────────────────────────
+    async function loadPreview() {
+      const el = document.getElementById("ranking-preview");
+      if (!window._supabase) {
+        el.innerHTML = '<div class="loading-text">Supabase 연결 안 됨 (config.js 확인)</div>';
+        return;
+      }
+      try {
+        const { data, error } = await window._supabase.rpc("get_rankings", {
+          p_limit: 10,
+          p_offset: 0,
+        });
+        if (error) throw error;
+        if (!data || data.length === 0) {
+          el.innerHTML = '<div class="loading-text">아직 플레이어가 없어요!</div>';
+          return;
+        }
+        const medals = ["🥇", "🥈", "🥉"];
+        el.innerHTML = data.map(function (row, i) {
+          return (
+            '<div class="rank-item">' +
+            '<div class="rank-left' + (i < 3 ? " top-rank" : "") + '">' +
+            (medals[i] || (i + 1) + "위") + " " + escapeHtml(row.nickname) +
+            "</div>" +
+            '<div class="rank-right">🔥 ' + row.score + "</div>" +
+            "</div>"
+          );
+        }).join("");
+      } catch (err) {
+        console.error("ranking preview error:", err);
+        el.innerHTML = '<div class="loading-text">랭킹을 불러오지 못했어요.</div>';
+      }
+    }
+
+    // ── Login / create ──────────────────────────────────────────
+    document.getElementById("start-btn").addEventListener("click", async function () {
+      const nicknameVal = document.getElementById("nickname").value.trim();
+      const pinVal      = document.getElementById("pin").value.trim();
+      const errEl       = document.getElementById("error-msg");
+
+      errEl.style.display = "none";
+
+      if (!nicknameVal) {
+        errEl.textContent = "닉네임을 입력해 주세요.";
+        errEl.style.display = "block";
+        return;
+      }
+      if (!/^[0-9]{4}$/.test(pinVal)) {
+        errEl.textContent = "비밀번호는 숫자 4자리를 입력해 주세요.";
+        errEl.style.display = "block";
+        return;
+      }
+      if (!window._supabase) {
+        errEl.textContent = "Supabase 연결이 안 됐어요. config.js를 확인해 주세요.";
+        errEl.style.display = "block";
+        return;
+      }
+
+      const btn = document.getElementById("start-btn");
+      btn.disabled = true;
+      btn.textContent = "접속 중…";
+
+      try {
+        const { data, error } = await window._supabase.rpc("login_or_create_player", {
+          p_nickname: nicknameVal,
+          p_pin:      pinVal,
+        });
+
+        if (error) throw error;
+
+        const row = data && data[0];
+        if (!row) throw new Error("no data returned");
+
+        localStorage.setItem("nickname", row.nickname);
+        localStorage.setItem("pin",      pinVal);
+        localStorage.setItem("score",    row.score);
+        location.replace("./clicker.html");
+      } catch (err) {
+        const msg = err.message || String(err);
+        if (msg.includes("wrong pin")) {
+          errEl.textContent = "비밀번호가 틀렸어요.";
+        } else {
+          errEl.textContent = "오류: " + msg;
+        }
+        errEl.style.display = "block";
+        btn.disabled = false;
+        btn.textContent = "시작하기 🚀";
+      }
+    });
+
+    // allow Enter key to submit
+    ["nickname", "pin"].forEach(function (id) {
+      document.getElementById(id).addEventListener("keydown", function (e) {
+        if (e.key === "Enter") document.getElementById("start-btn").click();
+      });
+    });
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    loadPreview();
+  </script>
+</body>
+</html>

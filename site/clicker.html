@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+  />
+  <title>Animal Clicker 🦁</title>
+  <link rel="stylesheet" href="./assets/style.css" />
+  <style>
+    #sync-status {
+      font-size: 12px;
+      color: #999;
+      margin-top: 2px;
+    }
+    #sync-status[data-state="offline"] { color: #e53e3e; }
+    #sync-status[data-state="syncing"] { color: #d69e2e; }
+    #sync-status[data-state="synced"]  { color: #38a169; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- 상단 -->
+    <div class="header">
+      <h2 class="title">ANIMAL CLICKER 🦁😽🐻</h2>
+
+      <!-- 상단 네비 -->
+      <div class="top-nav">
+        <a href="./index.html" class="home-btn">← 첫 화면</a>
+        <a href="./ranking.html" class="ranking-btn">🏆 랭킹</a>
+      </div>
+
+      <div class="user-info">
+        <div class="username">👤 <span id="nickname-display"></span></div>
+        <div class="count">🔥 <span id="count">0</span></div>
+      </div>
+      <div id="sync-status" data-state="synced">✅ synced</div>
+    </div>
+
+    <!-- 디자인 선택 -->
+    <div class="design-select">
+      <button onclick="setDesign('lion', event)" class="selected">🦁</button>
+      <button onclick="setDesign('bear', event)">🐻</button>
+      <button onclick="setDesign('cat', event)">🐱</button>
+    </div>
+
+    <!-- 클릭 영역 -->
+    <div class="click-area">
+      <img
+        src="./assets/images/lion_default.png"
+        id="clicker"
+        class="clicker"
+        draggable="false"
+      />
+    </div>
+  </div>
+
+  <!-- 소리 선택 하단 고정 -->
+  <div class="sound-fixed">
+    <div class="sound-select">
+      <button onclick="setSound('clicker1', event)" class="selected">🎵1</button>
+      <button onclick="setSound('clicker2', event)">🎵2</button>
+      <button onclick="setSound('clicker3', event)">🎵3</button>
+    </div>
+  </div>
+
+  <!-- Supabase JS v2 UMD bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- User config (gitignored) -->
+  <script src="./config.js" onerror="window._configMissing=true"></script>
+  <script src="./assets/supabaseClient.js"></script>
+
+  <script>
+    // Guard: redirect to login if no session
+    (function () {
+      const nickname = localStorage.getItem("nickname");
+      const pin      = localStorage.getItem("pin");
+      if (!nickname || !pin) {
+        location.replace("./index.html");
+      } else {
+        document.getElementById("nickname-display").textContent = nickname;
+        // Restore last known score from localStorage while we wait for first sync
+        const saved = parseInt(localStorage.getItem("score"), 10);
+        if (!isNaN(saved)) {
+          document.getElementById("count").textContent = saved;
+        }
+      }
+    })();
+  </script>
+
+  <!-- Clicker game logic -->
+  <script src="./assets/clicker.js"></script>
+</body>
+</html>
