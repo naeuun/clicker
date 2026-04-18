@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animal Clicker – 전체 랭킹 🏆</title>
+  <link rel="stylesheet" href="./assets/style.css" />
+  <style>
+    #ranking-list { min-height: 80px; }
+    .loading-text { color: #aaa; font-size: 14px; padding: 12px 0; text-align: center; }
+    #load-more-btn {
+      display: none;
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border: none;
+      border-radius: 14px;
+      background: #e9e6e3;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h2 class="title">🏆 전체 랭킹</h2>
+
+    <div class="card">
+      <div id="ranking-list">
+        <div class="loading-text" id="status-text">랭킹을 불러오는 중…</div>
+      </div>
+      <button id="load-more-btn">더 불러오기</button>
+    </div>
+
+    <div class="bottom-btns">
+      <a href="./index.html" class="sub-btn">← 첫 화면</a>
+      <a href="./clicker.html" class="main-btn">클리커 이동</a>
+    </div>
+  </div>
+
+  <!-- Supabase JS v2 UMD bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <!-- User config (gitignored) -->
+  <script src="./config.js" onerror="window._configMissing=true"></script>
+  <script src="./assets/supabaseClient.js"></script>
+
+  <script>
+    const PAGE_SIZE = 200;
+    let   offset    = 0;
+    let   loading   = false;
+    let   allLoaded = false;
+    let   totalRendered = 0;
+
+    const listEl       = document.getElementById("ranking-list");
+    const statusEl     = document.getElementById("status-text");
+    const loadMoreBtn  = document.getElementById("load-more-btn");
+
+    const medals = ["🥇", "🥈", "🥉"];
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderRows(rows) {
+      rows.forEach(function (row) {
+        const i    = totalRendered;
+        const div  = document.createElement("div");
+        div.className = "rank-item";
+        div.innerHTML =
+          '<div class="rank-left' + (i < 3 ? " top-rank" : "") + '">' +
+          (medals[i] || (i + 1) + "위") + " " + escapeHtml(row.nickname) +
+          "</div>" +
+          '<div class="rank-right">🔥 ' + row.score + "</div>";
+        listEl.appendChild(div);
+        totalRendered++;
+      });
+    }
+
+    async function loadPage() {
+      if (loading || allLoaded) return;
+      if (!window._supabase) {
+        statusEl.textContent = "Supabase 연결 안 됨 (config.js 확인)";
+        return;
+      }
+
+      loading = true;
+      statusEl.textContent = "불러오는 중…";
+      statusEl.style.display = "block";
+      loadMoreBtn.style.display = "none";
+
+      try {
+        const { data, error } = await window._supabase.rpc("get_rankings", {
+          p_limit:  PAGE_SIZE,
+          p_offset: offset,
+        });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          allLoaded = true;
+          statusEl.textContent =
+            totalRendered === 0 ? "아직 플레이어가 없어요!" : "✅ 전체 " + totalRendered + "명";
+          return;
+        }
+
+        renderRows(data);
+        offset += data.length;
+
+        if (data.length < PAGE_SIZE) {
+          // Last page reached
+          allLoaded = true;
+          statusEl.textContent = "✅ 전체 " + totalRendered + "명";
+        } else {
+          statusEl.style.display = "none";
+          loadMoreBtn.style.display = "block";
+        }
+      } catch (err) {
+        console.error("ranking error:", err);
+        statusEl.textContent = "불러오기 실패: " + (err.message || err);
+      } finally {
+        loading = false;
+      }
+    }
+
+    loadMoreBtn.addEventListener("click", loadPage);
+
+    // Auto-load first page
+    loadPage();
+  </script>
+</body>
+</html>
