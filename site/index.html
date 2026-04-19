@@ -32,8 +32,6 @@
         id="pin"
         placeholder="4자리 비밀번호"
         maxlength="4"
-        inputmode="numeric"
-        pattern="[0-9]{4}"
         required
         class="input"
         autocomplete="current-password"
@@ -105,8 +103,8 @@
         errEl.style.display = "block";
         return;
       }
-      if (!/^[0-9]{4}$/.test(pinVal)) {
-        errEl.textContent = "비밀번호는 숫자 4자리를 입력해 주세요.";
+      if (pinVal.length !== 4) {
+        errEl.textContent = "비밀번호를 4자 입력해 주세요.";
         errEl.style.display = "block";
         return;
       }
