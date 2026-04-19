@@ -5,7 +5,6 @@
   // ── DOM refs ───────────────────────────────────────────────────
   const clickerImg  = document.getElementById("clicker");
   const countEl     = document.getElementById("count");
-  const statusEl    = document.getElementById("sync-status");
 
   // ── State ──────────────────────────────────────────────────────
   let currentDesign = "lion";
@@ -72,10 +71,7 @@
 
   // ── Sync status display ───────────────────────────────────────
   function setStatus(state) {
-    if (!statusEl) return;
-    var labels = { synced: "✅ synced", syncing: "🔄 syncing…", offline: "⚠️ offline" };
-    statusEl.textContent = labels[state] || state;
-    statusEl.dataset.state = state;
+    if (window.console && console.debug) console.debug("[sync]", state);
   }
 
   // ── Batch sync to Supabase ────────────────────────────────────
@@ -115,7 +111,7 @@
 
   // ── Click / tap handler ───────────────────────────────────────
   clickerImg.addEventListener("pointerdown", function (event) {
-    if (event.pointerType === "touch") {
+    if (event.pointerType === "touch" && event.currentTarget === clickerImg) {
       event.preventDefault();
     }
 
