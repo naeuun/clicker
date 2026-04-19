@@ -20,6 +20,16 @@
   </style>
 </head>
 <body>
+  <script>
+    // 👇 이 가드를 맨위에 둬야 보안상 가장 안전!
+    (function () {
+      const nickname = localStorage.getItem("nickname");
+      const pin = localStorage.getItem("pin");
+      if (!nickname || !pin) {
+        location.replace("./index.html");
+      }
+    })();
+  </script>
   <div class="wrapper">
     <!-- 상단 -->
     <div class="header">
@@ -27,7 +37,7 @@
 
       <!-- 상단 네비 -->
       <div class="top-nav">
-        <a href="./index.html" class="home-btn">← 첫 화면</a>
+        <a href="./index.html" class="home-btn" id="home-btn">← 첫 화면</a>
         <a href="./ranking.html" class="ranking-btn">🏆 랭킹</a>
       </div>
 
@@ -71,30 +81,22 @@
   <script src="./assets/supabaseClient.js"></script>
 
   <script>
+    // ← 첫 화면(로그아웃) 로직
     document.getElementById("home-btn").addEventListener("click", function(){
       localStorage.removeItem("nickname");
       localStorage.removeItem("pin");
       localStorage.removeItem("score");
     });
 
-
-    // Guard: redirect to login if no session
-    (function () {
-      const nickname = localStorage.getItem("nickname");
-      const pin      = localStorage.getItem("pin");
-      if (!nickname || !pin) {
-        location.replace("./index.html");
-      } else {
-        document.getElementById("nickname-display").textContent = nickname;
-        // Restore last known score from localStorage while we wait for first sync
-        const saved = parseInt(localStorage.getItem("score"), 10);
-        if (!isNaN(saved)) {
-          document.getElementById("count").textContent = saved;
-        }
-      }
-    })();
-
+    // nickname/score 세팅
+    const nickname = localStorage.getItem("nickname");
+    document.getElementById("nickname-display").textContent = nickname;
+    const saved = parseInt(localStorage.getItem("score"), 10);
+    if (!isNaN(saved)) {
+      document.getElementById("count").textContent = saved;
+    }
   </script>
+
 
   <!-- Clicker game logic -->
   <script src="./assets/clicker.js"></script>
