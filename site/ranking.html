@@ -22,17 +22,6 @@
   </style>
 </head>
 <body>
-  <!-- 🔒 세션체크: 로그인 안 되어 있으면 무조건 홈으로 튕김 -->
-  <script>
-    (function () {
-      const nickname = localStorage.getItem("nickname");
-      const pin = localStorage.getItem("pin");
-      if (!nickname || !pin) {
-        location.replace("./index.html");
-      }
-    })();
-  </script>
-
   <div class="wrapper">
     <h2 class="title">🏆 전체 랭킹</h2>
     <div class="card">
@@ -44,7 +33,7 @@
 
     <div class="bottom-btns">
       <a href="./index.html" class="sub-btn" id="home-btn">← 첫 화면</a>
-      <a href="./clicker.html" class="main-btn">클리커 이동</a>
+      <a href="./clicker.html" class="main-btn" id="go-clicker-btn">클리커 이동</a>
     </div>
   </div>
 
@@ -54,13 +43,25 @@
   <script src="./config.js" onerror="window._configMissing=true"></script>
   <script src="./assets/supabaseClient.js"></script>
 
-  <script>
-    // ← 첫 화면(로그아웃) 클릭시 localStorage 정리!
+<script>
+    // ← 첫 화면(로그아웃)
     document.getElementById("home-btn").addEventListener("click", function(){
       localStorage.removeItem("nickname");
       localStorage.removeItem("pin");
       localStorage.removeItem("score");
     });
+
+    // 클리커 이동시 세션 체크
+    document.getElementById("go-clicker-btn").addEventListener("click", function(e){
+      const nickname = localStorage.getItem("nickname");
+      const pin = localStorage.getItem("pin");
+      if (!nickname || !pin) {
+        e.preventDefault();
+        alert("클리커를 이용하려면 먼저 로그인해야 합니다!");
+        location.replace("./index.html");
+      }
+    });
+
 
     const PAGE_SIZE = 200;
     let   offset    = 0;
