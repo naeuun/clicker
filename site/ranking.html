@@ -102,8 +102,12 @@
 
         if (!data || data.length === 0) {
           allLoaded = true;
-          statusEl.textContent =
-            totalRendered === 0 ? "아직 플레이어가 없어요!" : "✅ 전체 " + totalRendered + "명";
+          if (totalRendered === 0) {
+            statusEl.textContent = "아직 플레이어가 없어요!";
+            statusEl.style.display = "block";
+          } else {
+            statusEl.style.display = "none";
+          }
           return;
         }
 
@@ -111,9 +115,8 @@
         offset += data.length;
 
         if (data.length < PAGE_SIZE) {
-          // Last page reached
           allLoaded = true;
-          statusEl.textContent = "✅ 전체 " + totalRendered + "명";
+          statusEl.style.display = "none";
         } else {
           statusEl.style.display = "none";
           loadMoreBtn.style.display = "block";

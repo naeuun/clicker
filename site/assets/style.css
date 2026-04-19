@@ -154,6 +154,8 @@ border-bottom:1px solid #eee;
 display:flex;
 justify-content:space-between;
 margin-bottom:10px;
+position:relative;
+z-index: 10;
 }
 
 
