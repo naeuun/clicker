@@ -71,6 +71,13 @@
   <script src="./assets/supabaseClient.js"></script>
 
   <script>
+    document.getElementById("home-btn").addEventListener("click", function(){
+      localStorage.removeItem("nickname");
+      localStorage.removeItem("pin");
+      localStorage.removeItem("score");
+    });
+
+
     // Guard: redirect to login if no session
     (function () {
       const nickname = localStorage.getItem("nickname");
@@ -86,6 +93,7 @@
         }
       }
     })();
+
   </script>
 
   <!-- Clicker game logic -->

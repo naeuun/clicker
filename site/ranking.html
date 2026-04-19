@@ -33,7 +33,7 @@
     </div>
 
     <div class="bottom-btns">
-      <a href="./index.html" class="sub-btn">← 첫 화면</a>
+      <a href="./index.html" class="sub-btn" id="home-btn">← 첫 화면</a>
       <a href="./clicker.html" class="main-btn">클리커 이동</a>
     </div>
   </div>
@@ -79,6 +79,12 @@
         totalRendered++;
       });
     }
+
+    document.getElementById("home-btn").addEventListener("click", function(){
+      localStorage.removeItem("nickname");
+      localStorage.removeItem("pin");
+      localStorage.removeItem("score");
+    });
 
     async function loadPage() {
       if (loading || allLoaded) return;

@@ -58,11 +58,6 @@
   <script src="./assets/supabaseClient.js"></script>
 
   <script>
-    // ── Redirect if already logged in ───────────────────────────
-    if (localStorage.getItem("nickname") && localStorage.getItem("pin")) {
-      location.replace("./clicker.html");
-    }
-
     // ── Top-10 ranking preview ──────────────────────────────────
     async function loadPreview() {
       const el = document.getElementById("ranking-preview");
